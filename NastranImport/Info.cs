@@ -23,7 +23,7 @@ namespace NastranImport
         protected override FileTypeList AddFileTypes(FileReadOptions options)
         {
             var result = new FileTypeList();
-            result.AddFileType("Nastran (*.nas)", "nas");
+            result.AddFileType("Nastran (*.nas, *.dat)", "nas", "dat");
             return result;
         }
 
