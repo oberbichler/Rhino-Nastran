@@ -25,7 +25,7 @@ jobs:
         shell: cmd
       - name: Patch AssemblyInfo
         run: |
-          python tools/batch_assemblyinfo.py AModelImport\Properties\AssemblyInfo.cs ${{ github.ref }}
+          python ./tools/batch_assemblyinfo.py ./NastranImport/Properties/AssemblyInfo.cs ${{ github.ref }}
         shell: cmd
       - name: Build
         run: |
