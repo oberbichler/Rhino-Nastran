@@ -14,15 +14,18 @@ jobs:
       - name: Download vswhere
         run: |
           curl -L https://github.com/microsoft/vswhere/releases/download/2.7.1/vswhere.exe --output vswhere.exe
+        shell: cmd
       - name: Download nuget
         run: |
           curl -L https://dist.nuget.org/win-x86-commandline/latest/nuget.exe --output nuget.exe
+        shell: cmd
       - name: Restore packages
         run: |
           nuget restore .
       - name: Patch AssemblyInfo
         run: |
           python tools/batch_assemblyinfo.py AModelImport\Properties\AssemblyInfo.cs ${{ github.ref }}
+        shell: cmd
       - name: Build
         run: |
           setlocal enabledelayedexpansion
@@ -30,6 +33,7 @@ jobs:
             "%%i" %*
             exit /b !errorlevel!
           )
+        shell: cmd
       - name: Upload release
         uses: svenstaro/upload-release-action@v1-release
         with:
@@ -38,3 +42,4 @@ jobs:
           asset_name: NastranImport.rhp
           tag: ${{ github.ref }}
           overwrite: true
+        shell: cmd
