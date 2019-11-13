@@ -1,0 +1,40 @@
+on:
+  push:
+    tags:
+      - 'v*'
+
+name: Create Release
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+      - name: Download vswhere
+        run: |
+          curl -L https://github.com/microsoft/vswhere/releases/download/2.7.1/vswhere.exe --output vswhere.exe
+      - name: Download nuget
+        run: |
+          curl -L https://dist.nuget.org/win-x86-commandline/latest/nuget.exe --output nuget.exe
+      - name: Restore packages
+        run: |
+          nuget restore .
+      - name: Patch AssemblyInfo
+        run: |
+          python tools/batch_assemblyinfo.py AModelImport\Properties\AssemblyInfo.cs ${{ github.ref }}
+      - name: Build
+        run: |
+          setlocal enabledelayedexpansion
+          for /f "usebackq tokens=*" %%i in (`vswhere -latest -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\MSBuild.exe`) do (
+            "%%i" %*
+            exit /b !errorlevel!
+          )
+      - name: Upload release
+        uses: svenstaro/upload-release-action@v1-release
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ./NastranImport/bin/NastranImport.rhp
+          asset_name: NastranImport.rhp
+          tag: ${{ github.ref }}
+          overwrite: true
