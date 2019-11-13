@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using Rhino;
 using Rhino.FileIO;
 using Rhino.PlugIns;
+using Rhino.UI;
 
 namespace NastranImport
 {
@@ -27,15 +29,24 @@ namespace NastranImport
 
         protected override bool ReadFile(string filename, int index, RhinoDoc doc, FileReadOptions options)
         {
-            using (var stream = File.OpenText(filename))
+            try
             {
-                var data = NastranReader.Load(stream);
-                
-                foreach (var geometry in data.Geometries)
-                    doc.Objects.Add(geometry);
-            }
+                using (var stream = File.OpenText(filename))
+                {
+                    var data = NastranReader.Load(stream);
 
-            return true;
+                    foreach (var geometry in data.Geometries)
+                        doc.Objects.Add(geometry);
+                }
+
+                return true;
+            }
+            catch (Exception ex) when (!Debugger.IsAttached)
+            {
+                Dialogs.ShowMessage(ex.Message, "Import Error", ShowMessageButton.OK, ShowMessageIcon.Error);
+
+                return false;
+            }
         }
     }
 }
