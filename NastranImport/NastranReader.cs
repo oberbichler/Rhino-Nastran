@@ -1,4 +1,4 @@
-﻿using Rhino.Geometry;
+using Rhino.Geometry;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -33,7 +33,7 @@ namespace NastranImport
         {
             do
             {
-                CurrentLine = _textReader.ReadLine();
+                CurrentLine = _textReader.ReadLine()?.TrimEnd();
             } while (CurrentLine?.StartsWith("$") ?? false);    // skip comments
 
             return CurrentLine;
@@ -54,7 +54,8 @@ namespace NastranImport
 
         public bool TryReadBulk()
         {
-            if (!CurrentLine.StartsWith("BEGIN BULK"))
+
+            if (CurrentLine != "BEGIN BULK")
                 return false;
 
             var vertices = new Dictionary<int, int>();
