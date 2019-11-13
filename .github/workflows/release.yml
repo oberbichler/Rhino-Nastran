@@ -22,6 +22,7 @@ jobs:
       - name: Restore packages
         run: |
           nuget restore .
+        shell: cmd
       - name: Patch AssemblyInfo
         run: |
           python tools/batch_assemblyinfo.py AModelImport\Properties\AssemblyInfo.cs ${{ github.ref }}
@@ -35,11 +36,10 @@ jobs:
           )
         shell: cmd
       - name: Upload release
-        uses: svenstaro/upload-release-action@v1-release
+        uses: svenstaro/upload-release-action@v1-release        
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: ./NastranImport/bin/NastranImport.rhp
           asset_name: NastranImport.rhp
           tag: ${{ github.ref }}
           overwrite: true
-        shell: cmd
