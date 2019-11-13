@@ -1,4 +1,4 @@
-using Rhino.Geometry;
+﻿using Rhino.Geometry;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -40,7 +40,9 @@ namespace NastranImport
         }
 
         private bool EndOfFile => CurrentLine == null;
-        
+
+        private string RecordType => CurrentLine?.Substring(0, Math.Min(8, CurrentLine.Length)).TrimEnd();
+
         public void ReadAll()
         {
             while (!EndOfFile)
@@ -67,7 +69,7 @@ namespace NastranImport
             {
                 ReadLine();
 
-                if (CurrentLine.StartsWith("GRID"))
+                if (RecordType == "GRID")
                 {
                     var key = CurrentLine.Substring(8, 16).ToInt();
 
@@ -82,7 +84,7 @@ namespace NastranImport
                     continue;
                 }
 
-                if (CurrentLine.StartsWith("CTRIA3"))
+                if (RecordType == "CTRIA3")
                 {
                     var key = CurrentLine.Substring(8, 8).ToInt();
 
@@ -95,7 +97,7 @@ namespace NastranImport
                     continue;
                 }
 
-                if (CurrentLine.StartsWith("CQUAD4"))
+                if (RecordType == "CQUAD4")
                 {
                     var key = CurrentLine.Substring(8, 8).ToInt();
 
