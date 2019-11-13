@@ -84,6 +84,24 @@ namespace NastranImport
                     continue;
                 }
 
+                if (RecordType == "GRID*")
+                {
+                    var key = CurrentLine.Substring(8, 16).ToInt();
+
+                    var x = CurrentLine.Substring(40, 16).ToDouble();
+                    var y = CurrentLine.Substring(56, 16).ToDouble();
+
+                    ReadLine();
+
+                    var z = CurrentLine.Substring(8, 16).ToDouble();
+
+                    var index = mesh.Vertices.Add(x, y, z);
+
+                    vertices.Add(key, index);
+
+                    continue;
+                }
+
                 if (RecordType == "CTRIA3")
                 {
                     var key = CurrentLine.Substring(8, 8).ToInt();
