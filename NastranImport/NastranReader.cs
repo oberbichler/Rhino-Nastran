@@ -65,7 +65,7 @@ namespace NastranImport
 
             var mesh = new Mesh();
 
-            while (!CurrentLine.StartsWith("ENDDATA"))
+            while (CurrentLine != null && !CurrentLine.StartsWith("ENDDATA"))
             {
                 ReadLine();
 
